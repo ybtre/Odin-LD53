@@ -13,17 +13,9 @@ C_BG         :: rl.Color{ 13, 32, 27, 255 }
 C_BTN_HOVER  :: rl.Color{ 200, 200, 200, 255 }
 
 SCREEN : rl.Vector2 : { 1024.0, 768.0 }
-project_name :: "Mini Asteroids - Odin"
+project_name :: "Ludum Dare 53 - De-liver"
 
 NUM_ASTEROIDS       :: 100
-NUM_BULLETS         :: 150
-NUM_EXPLOSIONS      :: 15
-NUM_UPGRADE_BTNS    :: 3
-NUM_XP_ORBS         :: 100
-
-MAP_SIZE :: 14
-MAP_OFFSET_X :: 200
-MAP_OFFSET_Y :: 75
 
 SPRITE_OFFSET :: ((8 * 6) / 2)
 SPRITE_SCALE_MULTI :: 6

@@ -10,25 +10,20 @@ initialize_engine :: proc(){
     startup_game_overlord()
     setup_game()
 
-    setup_game_map()
     setup_background()
-    setup_cursor()
 }
 
 update_engine :: proc(){
-    switch get_current_screen() {
-        case SCREENS.MAIN_MENU:
+    switch current_screen {
+        case .MAIN_MENU:
             update_main_menu()
             break;
-        case SCREENS.GAMEPLAY:
+        case .GAMEPLAY:
             update_gameplay()
             break;
-        case SCREENS.GAME_OVER:
-            break;
-        case SCREENS.UPGRADE:
+        case .GAME_OVER:
             break;
     }
-    update_cursor()
 }
 
 render_engine :: proc(){
@@ -36,16 +31,14 @@ render_engine :: proc(){
     rl.ClearBackground(rl.BLACK)
 
     {// RENDER
-        switch get_current_screen() {
-            case SCREENS.MAIN_MENU:
+        switch current_screen {
+            case .MAIN_MENU:
                 render_main_menu()
                 break;
-            case SCREENS.GAMEPLAY:
+            case .GAMEPLAY:
                 render_gameplay()
                 break;
-            case SCREENS.GAME_OVER:
-                break;
-            case SCREENS.UPGRADE:
+            case .GAME_OVER:
                 break;
         }
         // background.render()

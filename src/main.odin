@@ -1,10 +1,7 @@
 package LD_53
 
-import fmt "core:fmt"
-import la "core:math/linalg"
-import "core:strconv"
-import rl "vendor:raylib"
 import "core:strings"
+import rl "vendor:raylib"
 
 main :: proc() {
 
@@ -15,7 +12,7 @@ main :: proc() {
 
 	initialize_engine()
 
-	is_running: bool = true;
+	is_running: bool = true
 	for is_running && !rl.WindowShouldClose()
 	{
 		{// UPDATE

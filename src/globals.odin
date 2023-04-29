@@ -1,7 +1,6 @@
 package LD_53 
 
 import rl "vendor:raylib"
-import m "core:math/linalg/hlsl"
 
 C_PLAYER     :: rl.Color{ 72, 107, 127, 255 }
 C_ASTEROID   :: rl.Color{ 187, 71, 79, 255 }

@@ -1,6 +1,5 @@
 package LD_53
 
-import "core:fmt"
 
 import rl "vendor:raylib"
 

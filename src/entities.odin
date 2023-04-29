@@ -9,7 +9,7 @@ Sprite :: struct {
 }
 
 Entity :: struct {
-    is_alive: bool,
+    alive: bool,
     rec: rl.Rectangle,
     spr: Sprite,
 

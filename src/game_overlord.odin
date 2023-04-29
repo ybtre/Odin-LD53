@@ -1,6 +1,5 @@
 package LD_53 
 
-import rl "vendor:raylib"
 
 startup_game_overlord :: proc(){
     current_screen = SCREENS.MAIN_MENU
@@ -12,5 +11,5 @@ setup_game :: proc() {
 
 reset_game :: proc(){
 
-    is_paused = false;
+    is_paused = false
 }

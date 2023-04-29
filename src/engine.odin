@@ -17,12 +17,12 @@ update_engine :: proc(){
     switch current_screen {
         case .MAIN_MENU:
             update_main_menu()
-            break;
+            break
         case .GAMEPLAY:
             update_gameplay()
-            break;
+            break
         case .GAME_OVER:
-            break;
+            break
     }
 }
 
@@ -34,12 +34,12 @@ render_engine :: proc(){
         switch current_screen {
             case .MAIN_MENU:
                 render_main_menu()
-                break;
+                break
             case .GAMEPLAY:
                 render_gameplay()
-                break;
+                break
             case .GAME_OVER:
-                break;
+                break
         }
         // background.render()
         // game_map.render(game_atlas)

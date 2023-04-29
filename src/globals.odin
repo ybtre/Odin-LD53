@@ -11,7 +11,7 @@ C_TEXT       :: rl.Color{ 188, 33, 106, 255 }
 C_BG         :: rl.Color{ 13, 32, 27, 255 }
 C_BTN_HOVER  :: rl.Color{ 200, 200, 200, 255 }
 
-SCREEN : rl.Vector2 : { 1024.0, 768.0 }
+SCREEN : rl.Vector2 : { 1280.0, 720.0 }
 project_name :: "Ludum Dare 53 - De-liver"
 
 NUM_ASTEROIDS       :: 100

@@ -2,10 +2,7 @@ package LD_53
 
 import rl "vendor:raylib"
 
-game_atlas : rl.Texture2D
-
 initialize_engine :: proc(){
-    // game_atlas = rl.LoadTexture("../assets/game_atlas_8x8.png")
 
     startup_game_overlord()
     setup_game()
@@ -13,10 +10,10 @@ initialize_engine :: proc(){
     setup_background()
 
     setup_cathedral()
-    set_cathedral_pos(rl.Vector2{1050, 550})
+    set_cathedral_pos(rl.Vector2{1100, 550})
 
     setup_liver()
-    set_liver_pos(rl.Vector2{250, 150})
+    set_liver_pos(rl.Vector2{200, 120})
 
     setup_ants()
 
@@ -64,5 +61,4 @@ render_engine :: proc(){
 }
 
 shutdown_engine :: proc(){
-    rl.UnloadTexture(game_atlas)
 }

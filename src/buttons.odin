@@ -7,9 +7,9 @@ buttons : [MAX_BTNS]Button
 btn_tex : rl.Texture2D
 
 setup_buttons :: proc() {
-    for i in 0..<MAX_BTNS {
-        btn_tex = rl.LoadTexture("../assets/ant_temp.png")
+    // btn_tex = rl.LoadTexture("../assets/ant_temp.png")
 
+    for i in 0..<MAX_BTNS {
         buttons[i].spr.src = {0,0, 160, 160}
         buttons[i].spr.dest = { 0, 0, buttons[i].spr.src.width/4, buttons[i].spr.src.height/4 }
         buttons[i].spr.center = { buttons[i].spr.src.width / 2.0, buttons[i].spr.src.height / 2.0 }
@@ -52,19 +52,42 @@ update_buttons :: proc() {
 render_buttons :: proc() {
     using rl
 
-    for i in 0..<MAX_BTNS
+    DrawRectangleLinesEx(buttons[0].rec, 4, RED)
+    if buttons[0].is_highlighted {
+        if buttons[0].is_pressed
         {
-            DrawRectangleLinesEx(buttons[i].rec, 4, RED)
-            if buttons[i].is_highlighted {
-                if buttons[i].is_pressed
-                {
-                    DrawTexturePro(ant_tex, buttons[i].spr.src, buttons[i].spr.dest, buttons[i].spr.center, 0, GREEN)
-                } 
-                else {
-                    DrawTexturePro(ant_tex, buttons[i].spr.src, buttons[i].spr.dest, buttons[i].spr.center, 0, BLUE)
-                }
-            } else {
-                DrawTexturePro(ant_tex, buttons[i].spr.src, buttons[i].spr.dest, buttons[i].spr.center, 0, MAGENTA)
-            }
+            DrawTexturePro(gatherer_ant_tex, buttons[0].spr.src, buttons[0].spr.dest, buttons[0].spr.center, 0, GREEN)
+        } 
+        else {
+            DrawTexturePro(gatherer_ant_tex, buttons[0].spr.src, buttons[0].spr.dest, buttons[0].spr.center, 0, BLUE)
         }
+    } else {
+        DrawTexturePro(gatherer_ant_tex, buttons[0].spr.src, buttons[0].spr.dest, buttons[0].spr.center, 0, MAGENTA)
+    }
+
+    DrawRectangleLinesEx(buttons[1].rec, 4, RED)
+    if buttons[1].is_highlighted {
+        if buttons[1].is_pressed
+        {
+            DrawTexturePro(builder_ant_tex, buttons[1].spr.src, buttons[1].spr.dest, buttons[1].spr.center, 0, GREEN)
+        } 
+        else {
+            DrawTexturePro(builder_ant_tex, buttons[1].spr.src, buttons[1].spr.dest, buttons[1].spr.center, 0, BLUE)
+        }
+    } else {
+        DrawTexturePro(builder_ant_tex, buttons[1].spr.src, buttons[1].spr.dest, buttons[1].spr.center, 0, MAGENTA)
+    }
+
+    DrawRectangleLinesEx(buttons[2].rec, 4, RED)
+    if buttons[2].is_highlighted {
+        if buttons[2].is_pressed
+        {
+            DrawTexturePro(soldier_ant_tex, buttons[2].spr.src, buttons[2].spr.dest, buttons[2].spr.center, 0, GREEN)
+        } 
+        else {
+            DrawTexturePro(soldier_ant_tex, buttons[2].spr.src, buttons[2].spr.dest, buttons[2].spr.center, 0, BLUE)
+        }
+    } else {
+        DrawTexturePro(soldier_ant_tex, buttons[2].spr.src, buttons[2].spr.dest, buttons[2].spr.center, 0, MAGENTA)
+    }
 }

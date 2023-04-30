@@ -1,19 +1,26 @@
 package LD_53
 
 import rl "vendor:raylib"
+import "core:fmt"
 
 liver : Liver
 liver_tex : rl.Texture2D
 
-MAX_PIECES :: MAX_ANTS
-liver_pieces : []Entity
+MAX_PIECES :: MAX_ANTS * 4
+liver_pieces : [MAX_PIECES]Entity
 liver_piece_tex : rl.Texture2D
+LIVER_PIECES_SCALE :: 4
+LIVER_PIECES_PIVOT :: LIVER_PIECES_SCALE * 2
+liver_pieces_dropoff_point :: rl.Vector2{900, 460}
+liver_pieces_count : i32 = 0
+liver_pieces_for_building : [dynamic]^Entity
+
 
 setup_liver :: proc() {
     liver_tex = rl.LoadTexture("../assets/liver_temp.png")
     liver_piece_tex = rl.LoadTexture("../assets/liver_piece.png")
 
-    liver.ent.spr.src = {0,0, 320, 160}
+    liver.ent.spr.src = {0,0, 320, 160} 
     liver.ent.spr.dest = { 0, 0, liver.ent.spr.src.width, liver.ent.spr.src.height }
     liver.ent.spr.center = { liver.ent.spr.src.width / 2.0, liver.ent.spr.src.height / 2.0 }
 
@@ -45,21 +52,61 @@ render_liver :: proc() {
         liver.ent.color)
 }
 
-spawn_liver_piece :: proc(ant : ^Ant) {
+spawn_liver_piece :: proc(ant : ^Ant) -> ^Entity {
     for i in 0..<MAX_PIECES
     {
         if !liver_pieces[i].alive
         {
             liver_pieces[i].spr.src = {0,0, 160, 160}
-            liver_pieces[i].spr.dest = { 0, 0, liver.ent.spr.src.width, liver.ent.spr.src.height }
-            liver_pieces[i].spr.center = { liver.ent.spr.src.width / 2.0, liver.ent.spr.src.height / 2.0 }
+            liver_pieces[i].spr.dest = { ant.ent.rec.x, ant.ent.rec.y, liver_pieces[i].spr.src.width/LIVER_PIECES_SCALE, liver_pieces[i].spr.src.height/LIVER_PIECES_SCALE }
+            liver_pieces[i].spr.center = { liver_pieces[i].spr.src.width / LIVER_PIECES_PIVOT, liver_pieces[i].spr.src.height / LIVER_PIECES_PIVOT }
             
             liver_pieces[i].alive = true
-            liver_pieces[i].rec = {0, 0, liver.ent.spr.src.width, liver.ent.spr.src.height}
+            liver_pieces[i].rec = {ant.ent.rec.x, ant.ent.rec.y, liver_pieces[i].spr.src.width/LIVER_PIECES_SCALE, liver_pieces[i].spr.src.height/LIVER_PIECES_SCALE}
             liver_pieces[i].color = rl.WHITE
             liver_pieces[i].speed = 0
 
-            break
+            return &liver_pieces[i]
         }
+    }
+    return nil
+}
+
+render_liver_pieces :: proc() {
+    using rl
+
+    for i in 0..<MAX_PIECES
+    {
+        if liver_pieces[i].alive
+        {
+            DrawRectangleLinesEx(liver_pieces[i].rec, 4, GREEN)
+            DrawTexturePro(
+                liver_piece_tex, 
+                liver_pieces[i].spr.src, 
+                liver_pieces[i].spr.dest, 
+                liver_pieces[i].spr.center,
+                0,
+                // f32(GetTime()) * 90,
+                liver_pieces[i].color)
+        }
+    }
+}
+
+set_liver_piece_pos_to_ant :: proc(ant : ^Ant, piece : ^Entity) 
+{
+    piece.rec = {ant.ent.rec.x, ant.ent.rec.y, piece.spr.src.width/LIVER_PIECES_SCALE, piece.spr.src.height/LIVER_PIECES_SCALE}
+    piece.spr.dest = {ant.ent.spr.dest.x, ant.ent.spr.dest.y, piece.spr.src.width/LIVER_PIECES_SCALE, piece.spr.src.height/LIVER_PIECES_SCALE}
+}
+
+handle_liver_piece_dropoff :: proc(POS : rl.Vector2, PIECE : ^Entity)
+{
+    liver_pieces_count += 1
+    fmt.println(liver_pieces_count)
+
+    for i in 0..<liver_pieces_count 
+    {
+        PIECE.rec = {POS.x, POS.y + f32((rl.GetRandomValue(11, 14) * i)), PIECE.spr.src.width/LIVER_PIECES_SCALE, PIECE.spr.src.height/LIVER_PIECES_SCALE}
+        PIECE.spr.dest = {POS.x, POS.y + f32((12 * i)), PIECE.spr.src.width/LIVER_PIECES_SCALE, PIECE.spr.src.height/LIVER_PIECES_SCALE}
+        append(&liver_pieces_for_building, PIECE)
     }
 }

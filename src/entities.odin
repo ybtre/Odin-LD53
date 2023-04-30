@@ -56,6 +56,7 @@ Ant :: struct {
     ent: Entity,
     rot: f32,
     has_resources: bool,
+    liver_piece: ^Entity,
     type: ANT_TYPES,
     spawn_point: rl.Vector2,
     target: rl.Vector2,

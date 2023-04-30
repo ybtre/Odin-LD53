@@ -2,14 +2,39 @@ package LD_53
 
 import rl "vendor:raylib"
 
+spawn_timer : f32 = 0
+
 update_gameplay :: proc() {
+    using rl
+
+    spawn_timer += rl.GetFrameTime()
+
     if rl.IsKeyPressed(rl.KeyboardKey.P){
         is_paused = !is_paused
     }
+
     if !is_paused
     {
         gameplay_time_total += rl.GetFrameTime()
 
+        update_buttons()
+
+        
+        if buttons[0].is_pressed 
+        {
+            for i in 0..<MAX_ANTS 
+            {
+                if !ants[i].ent.alive
+                {
+                    ants[i].ent.alive = true
+                    spawn_ant(&ants[i])
+                    break
+                }
+            }
+        }
+       
+    
+        update_ants()
     }
     else 
     {
@@ -20,12 +45,16 @@ update_gameplay :: proc() {
 render_gameplay :: proc(){
     using rl
     
-    // if !player.p.ent.is_alive
-    // {
-    //     set_current_screen(SCREENS.GAME_OVER)
-    // }
-    // else { //------Objects Render------//
-            render_background()
-    // }
-    
+    render_cathedral()
+    render_liver()
+    render_ants()
+   
+    if is_paused && ((pause_blink_counter / 30) % 2 == 0)
+    {
+		rl.DrawText("GAME PAUSED", i32(SCREEN.x / 2 - 290), i32(SCREEN.y / 2 - 50), 80, rl.RED)
+	} 
+
+    {// UI
+       render_buttons()
+    }
 }

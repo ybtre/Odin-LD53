@@ -32,11 +32,11 @@ main :: proc() {
 setup_window :: proc(){
 	rl.SetTargetFPS(60)
 
-	icon: rl.Image = rl.LoadImage("../assets/icons/window_icon.png")
+	// icon: rl.Image = rl.LoadImage("../assets/icons/window_icon.png")
 
-	rl.ImageFormat(&icon, rl.PixelFormat.UNCOMPRESSED_R8G8B8A8)
+	// rl.ImageFormat(&icon, rl.PixelFormat.UNCOMPRESSED_R8G8B8A8)
 
-	rl.SetWindowIcon(icon)
+	// rl.SetWindowIcon(icon)
 
-	rl.UnloadImage(icon)
+	// rl.UnloadImage(icon)
 }

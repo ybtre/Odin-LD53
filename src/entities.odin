@@ -55,6 +55,7 @@ ANT_TYPES :: enum {
 Ant :: struct {
     ent: Entity,
     rot: f32,
+    has_resources: bool,
     type: ANT_TYPES,
     spawn_point: rl.Vector2,
     target: rl.Vector2,

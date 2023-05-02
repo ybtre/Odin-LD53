@@ -49,6 +49,52 @@ update_buttons :: proc() {
     }
 }
 
+handle_button_interactions :: proc()
+{
+    using rl   
+    
+    if buttons[0].is_pressed 
+    {
+        for i in 0..<MAX_ANTS 
+        {
+            if !ants[i].ent.alive
+            {
+                ants[i].ent.alive = true
+                spawn_ant(&ants[i], ANT_TYPES.GATHERER)
+                gatherer_ants_count += 1
+                break
+            }
+        }
+    }
+    if buttons[1].is_pressed 
+    {
+        for i in 0..<MAX_ANTS 
+        {
+            if !ants[i].ent.alive
+            {
+                ants[i].ent.alive = true
+                spawn_ant(&ants[i], ANT_TYPES.BUILDER)
+                builder_ants_count += 1
+                break
+            }
+        }
+    }
+   
+    if buttons[2].is_pressed 
+    {
+        for i in 0..<MAX_ANTS 
+        {
+            if !ants[i].ent.alive
+            {
+                ants[i].ent.alive = true
+                spawn_ant(&ants[i], ANT_TYPES.SOLDIER)
+                soldier_ants_count += 1
+                break
+            }
+        }
+    }
+}
+
 render_buttons :: proc() {
     using rl
 

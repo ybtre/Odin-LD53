@@ -1,8 +1,10 @@
 package LD_53 
 
 import rl "vendor:raylib"
+import "core:fmt"
 
 spawn_timer : f32 = 0
+beetle_spawn_timer : f32 = 3
 
 update_gameplay :: proc() {
     using rl
@@ -16,37 +18,21 @@ update_gameplay :: proc() {
     if !is_paused
     {
         gameplay_time_total += rl.GetFrameTime()
+        spawn_timer += GetFrameTime()
 
         update_buttons()
+        handle_button_interactions()
 
-        
-        if buttons[0].is_pressed 
+        if spawn_timer >= beetle_spawn_timer
         {
-            for i in 0..<MAX_ANTS 
-            {
-                if !ants[i].ent.alive
-                {
-                    ants[i].ent.alive = true
-                    spawn_ant(&ants[i], ANT_TYPES.GATHERER)
-                    break
-                }
-            }
+            fmt.println("SPAWN BEETLE")
+            spawn_beetle()
+            spawn_timer = 0
         }
-        if buttons[1].is_pressed 
-        {
-            for i in 0..<MAX_ANTS 
-            {
-                if !ants[i].ent.alive
-                {
-                    ants[i].ent.alive = true
-                    spawn_ant(&ants[i], ANT_TYPES.BUILDER)
-                    break
-                }
-            }
-        }
-       
-    
+
+        update_cathedral()    
         update_ants()
+        update_beetles()
     }
     else 
     {
@@ -60,6 +46,7 @@ render_gameplay :: proc(){
     render_cathedral()
     render_liver()
     render_ants()
+    render_beetles()
     render_liver_pieces()
    
     if is_paused && ((pause_blink_counter / 30) % 2 == 0)
@@ -69,7 +56,13 @@ render_gameplay :: proc(){
 
     {// UI
        render_buttons()
-
-    //    DrawText(TextFormat("Liver Pieces: %d", liver_pieces_count), 690, 770, 20, BLUE)
+        DrawText(TextFormat("Liver Pieces Supply: %i", liver_pieces_count), 700, 10, 50, GRAY)
+        DrawText(TextFormat("Gatherer Ants: %i", gatherer_ants_count), 700, 60, 50, GRAY)
+        DrawText(TextFormat("Builder Ants: %i", builder_ants_count), 700, 110, 50, GRAY)
+        DrawText(TextFormat("Soldier Ants: %i", soldier_ants_count), 700, 160, 50, GRAY)
+        DrawText(TextFormat("Beetles Count: %i", beetles_count), 700, 210, 50, GRAY)
+        
+        DrawText(TextFormat("Build Progress: %i", cathedral.build_progress), 700, 260, 50, GRAY)
+        DrawText(TextFormat("Build Stage: %i", cathedral.build_stage), 700, 320, 50, GRAY)
     }
 }

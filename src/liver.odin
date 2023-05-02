@@ -1,7 +1,7 @@
 package LD_53
 
 import rl "vendor:raylib"
-import "core:fmt"
+// import "core:fmt"
 
 liver : Liver
 liver_tex : rl.Texture2D
@@ -101,7 +101,7 @@ set_liver_piece_pos_to_ant :: proc(ant : ^Ant, piece : ^Entity)
 handle_liver_piece_dropoff :: proc(POS : rl.Vector2, PIECE : ^Entity)
 {
     liver_pieces_count += 1
-    fmt.println(liver_pieces_count)
+    // fmt.println(liver_pieces_count)
 
     for i in 0..<liver_pieces_count 
     {

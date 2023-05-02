@@ -33,7 +33,7 @@ Cathedral :: struct {
     ent: Entity,
     stages_sprites: []Sprite,
     rot: f32,
-    build_progress: f32,
+    build_progress: i32,
     build_stage: i32,
 }
 
@@ -60,6 +60,16 @@ Ant :: struct {
     type: ANT_TYPES,
     spawn_point: rl.Vector2,
     target: rl.Vector2,
+    detection_radius: i32,
+    hp: i32,
+    dmg: i32,
+}
+
+Beetle :: struct {
+    ent: Entity,
+    rot: f32,
+    spawn_point: rl.Vector2,
+    target: ^Ant,
     detection_radius: i32,
     hp: i32,
     dmg: i32,

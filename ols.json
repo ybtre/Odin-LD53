@@ -2,11 +2,11 @@
     "collections": [
         {
             "name": "core",
-            "path": "C:\\Users\\bumbe\\Documents\\UniVerse\\Odin\\core"
+            "path": "C:\\Odin\\core"
         },
         {
             "name": "shared",
-            "path": "C:\\Users\\bumbe\\Documents\\UniVerse\\OdinProjects\\Odin-LD53\\src"
+            "path": "C:\\Users\\hristo.vuchev\\Documents\\WorkVerse\\Odin-Projects\\Odin-LD53\\src"
         }
     ],
     "enable_document_symbols": true,

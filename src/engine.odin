@@ -16,6 +16,7 @@ initialize_engine :: proc(){
     set_liver_pos(rl.Vector2{200, 120})
 
     setup_ants()
+    setup_bettles()
 
     setup_buttons()
     set_btn_pos(&buttons[0], rl.Vector2{ 400, 700})
@@ -61,4 +62,15 @@ render_engine :: proc(){
 }
 
 shutdown_engine :: proc(){
+    using rl
+
+    UnloadTexture(beetle_tex)
+    UnloadTexture(liver_tex)
+    UnloadTexture(btn_tex)
+    UnloadTexture(cathedral_tex)
+    UnloadTexture(bg_tex)
+    UnloadTexture(builder_ant_tex)
+    UnloadTexture(soldier_ant_tex)
+    UnloadTexture(gatherer_ant_tex)
+    UnloadTexture(liver_piece_tex)
 }

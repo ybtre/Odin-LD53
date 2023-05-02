@@ -27,13 +27,72 @@ set_cathedral_pos :: proc(new_pos : rl.Vector2) {
     cathedral.ent.spr.dest = {new_pos.x , new_pos.y , cathedral.ent.spr.src.width, cathedral.ent.spr.src.height }
 }
 
+update_cathedral :: proc() {
+    if cathedral.build_progress >= 10
+    {
+        cathedral.build_stage += 1
+        cathedral.build_progress = 0
+    }
+
+    if cathedral.build_stage == 5
+    {
+        reset_game()
+        current_screen = .MAIN_MENU
+    }
+
+}
+
 render_cathedral :: proc() {
+    using rl
+
     rl.DrawRectangleLinesEx(cathedral.ent.rec, 4, rl.ORANGE)
-    rl.DrawTexturePro(
-        cathedral_tex, 
-        cathedral.ent.spr.src, 
-        cathedral.ent.spr.dest, 
-        cathedral.ent.spr.center,
-        cathedral.rot,
-        cathedral.ent.color)
+
+    if cathedral.build_stage == 0
+    {
+        rl.DrawTexturePro(
+                cathedral_tex, 
+                cathedral.ent.spr.src, 
+                cathedral.ent.spr.dest, 
+                cathedral.ent.spr.center,
+                cathedral.rot,
+                WHITE)
+    }
+    else if cathedral.build_stage == 1
+    {
+        rl.DrawTexturePro(
+                cathedral_tex, 
+                cathedral.ent.spr.src, 
+                cathedral.ent.spr.dest, 
+                cathedral.ent.spr.center,
+                cathedral.rot,
+                GREEN)
+    }
+    else if cathedral.build_stage == 2
+    {
+        rl.DrawTexturePro(
+                cathedral_tex, 
+                cathedral.ent.spr.src, 
+                cathedral.ent.spr.dest, 
+                cathedral.ent.spr.center,
+                cathedral.rot,
+                BLUE)
+    } else if cathedral.build_stage == 3
+    {
+        rl.DrawTexturePro(
+                cathedral_tex, 
+                cathedral.ent.spr.src, 
+                cathedral.ent.spr.dest, 
+                cathedral.ent.spr.center,
+                cathedral.rot,
+                PURPLE)
+    } else if cathedral.build_stage == 4
+    {
+        rl.DrawTexturePro(
+                cathedral_tex, 
+                cathedral.ent.spr.src, 
+                cathedral.ent.spr.dest, 
+                cathedral.ent.spr.center,
+                cathedral.rot,
+                ORANGE)
+     }
 }

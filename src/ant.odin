@@ -1,6 +1,7 @@
 package LD_53
 
 import rl "vendor:raylib"
+// import "core:fmt"
 
 MAX_ANTS :: 30
 ants : [MAX_ANTS]Ant
@@ -44,8 +45,11 @@ setup_ants :: proc() {
         ants[i].has_resources = false
         ants[i].spawn_point = rl.Vector2{ cathedral.ent.rec.x, cathedral.ent.rec.y }
         ants[i].target = rl.Vector2{liver.ent.rec.x + liver.ent.rec.width, liver.ent.rec.y + liver.ent.rec.height}
-        ants[i].detection_radius = 300
-        ants[i].hp = 1
+        ants[i].target_beetle = nil
+        ants[i].detection_radius = 200
+        ants[i].attack_cooldown = 2
+        ants[i].attack_timer = ants[i].attack_cooldown
+        ants[i].hp = 3
         ants[i].dmg = 1
     }
    
@@ -186,12 +190,58 @@ update_builder_ants :: proc(i: int)
 
 update_soldier_ants :: proc(i: int)
 {
-    if ants[i].ent.rec.x != ants[i].target.x && ants[i].ent.rec.y != ants[i].target.y
+    using rl
+
+    if ants[i].target_beetle == nil
     {
+        ants[i].target = rl.Vector2{SCREEN.x /2 - 70, SCREEN.y /2}
         pos := rl.Vector2{ants[i].ent.rec.x, ants[i].ent.rec.y}
         pos = vec2_move_towards(pos, ants[i].target, ants[i].ent.speed)
 
         set_ant_pos(&ants[i], pos)
+    
+        for j in 0..<MAX_BEETLES
+        {
+            if beetles[j].ent.alive 
+            {
+                if CheckCollisionCircleRec(Vector2{ants[i].ent.rec.x + ants[i].ent.spr.src.width/SOLDIER_PIVOT, ants[i].ent.rec.y + ants[i].ent.spr.src.width/SOLDIER_PIVOT}, 
+                                            f32(ants[i].detection_radius), beetles[j].ent.rec)
+                {
+                    // fmt.println("FOUND BEETLE TARGET")
+                    ants[i].target_beetle = &beetles[j]
+                    break
+                }
+            }
+        }
+    }
+    else if ants[i].target_beetle != nil
+    {
+        pos := rl.Vector2{ants[i].ent.rec.x, ants[i].ent.rec.y}
+        pos = vec2_move_towards(pos, Vector2{ants[i].target_beetle.ent.rec.x, ants[i].target_beetle.ent.rec.y}, ants[i].ent.speed)
+
+        set_ant_pos(&ants[i], pos)
+
+        
+        if ants[i].ent.rec.x == ants[i].target_beetle.ent.rec.x && ants[i].ent.rec.y == ants[i].target_beetle.ent.rec.y
+        {
+            ants[i].attack_timer += rl.GetFrameTime()
+
+            if ants[i].attack_timer >= ants[i].attack_cooldown 
+            {
+                if ants[i].target_beetle.ent.alive
+                {
+                    // fmt.println("ATTACK")
+                    ants[i].target_beetle.hp -= ants[i].dmg
+                    // fmt.println(ants[i].target_beetle.hp)
+                        
+                    ants[i].attack_timer = 0
+                }
+                else if ants[i].target_beetle.ent.alive == false
+                {
+                    ants[i].target_beetle = nil
+                }
+            }
+        }
     }
 }
 
@@ -227,7 +277,7 @@ render_ants :: proc() {
                         ants[i].ent.color)
                     break
                 case .SOLDIER:
-                    DrawCircleV(Vector2{ants[i].ent.rec.x + ants[i].ent.spr.src.width/SOLDIER_PIVOT, ants[i].ent.rec.y + ants[i].ent.spr.src.width/SOLDIER_PIVOT}, f32(ants[i].detection_radius), RED)
+                    DrawCircleLines(i32(ants[i].ent.rec.x + ants[i].ent.spr.src.width/SOLDIER_PIVOT), i32(ants[i].ent.rec.y + ants[i].ent.spr.src.width/SOLDIER_PIVOT), f32(ants[i].detection_radius), RED)
                     DrawRectangleLinesEx(ants[i].ent.rec, 4, GREEN)
                     DrawTexturePro(
                         soldier_ant_tex, 

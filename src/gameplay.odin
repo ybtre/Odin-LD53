@@ -4,7 +4,7 @@ import rl "vendor:raylib"
 import "core:fmt"
 
 spawn_timer : f32 = 0
-beetle_spawn_timer : f32 = 3
+beetle_spawn_timer : f32 = 10
 
 update_gameplay :: proc() {
     using rl
@@ -31,8 +31,8 @@ update_gameplay :: proc() {
         }
 
         update_cathedral()    
-        update_ants()
         update_beetles()
+        update_ants()
     }
     else 
     {

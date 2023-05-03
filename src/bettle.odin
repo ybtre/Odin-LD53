@@ -33,8 +33,10 @@ setup_bettles :: proc() {
 			beetles[i].spawn_point = rl.Vector2{ SCREEN.x / 2, -10 }
 		}
         beetles[i].target = nil
-        beetles[i].detection_radius = 300
-        beetles[i].hp = 1
+        beetles[i].detection_radius = 100
+		beetles[i].attack_cooldown = 2
+		beetles[i].attack_timer = 0
+        beetles[i].hp = 2
         beetles[i].dmg = 1
     }
 }
@@ -46,7 +48,18 @@ spawn_beetle :: proc()
 		if beetles[i].ent.alive == false
 		{
 			beetles[i].ent.alive = true
+			beetles[i].hp = 2
 			beetles_count += 1
+			
+			spawn_dir := rl.GetRandomValue(0, 1)
+			if spawn_dir == 0
+			{
+				beetles[i].spawn_point = rl.Vector2{ -10, SCREEN.y / 2 }
+			}
+			else if spawn_dir == 1
+			{
+				beetles[i].spawn_point = rl.Vector2{ SCREEN.x / 2, -10 }
+			}
 			
 			beetles[i].ent.rec = { beetles[i].spawn_point.x, beetles[i].spawn_point.y, beetles[i].ent.spr.src.width/GATHERER_SCALE_MULTI, beetles[i].ent.spr.src.height/GATHERER_SCALE_MULTI} 
 		    beetles[i].ent.spr.dest = { beetles[i].spawn_point.x + beetles[i].ent.spr.src.width/GATHERER_PIVOT, beetles[i].spawn_point.y  + beetles[i].ent.spr.src.height/GATHERER_PIVOT, beetles[i].ent.spr.src.width/GATHERER_SCALE_MULTI, beetles[i].ent.spr.src.height/GATHERER_SCALE_MULTI }
@@ -70,6 +83,14 @@ update_beetles :: proc()
 
 update_beetle :: proc(i: int)
 {
+	using rl
+
+	if beetles[i].hp <= 0
+	{
+		beetles[i].ent.alive = false
+		beetles_count -= 1
+	}
+	
 	if beetles[i].target != nil
 	{
 		if beetles[i].ent.rec.x != beetles[i].target.ent.rec.x && beetles[i].ent.rec.y != beetles[i].target.ent.rec.y
@@ -82,6 +103,18 @@ update_beetle :: proc(i: int)
 	}
 	else if beetles[i].target == nil
 	{
+        // for j in 0..<MAX_ANTS
+		// {
+            // if CheckCollisionCircleRec(Vector2{ants[i].ent.rec.x + ants[i].ent.spr.src.width/SOLDIER_PIVOT, ants[i].ent.rec.y + ants[i].ent.spr.src.width/SOLDIER_PIVOT}, 
+                                        // f32(ants[i].detection_radius), beetles[j].ent.rec)
+			// if CheckCollisionCircleRec(Vector2{beetles[i].ent.rec.x })
+   //          {
+   //              fmt.println("HIT")
+   //              ants[i].target_beetle = &beetles[j]
+   //          }
+        // }
+
+		
         pos := rl.Vector2{beetles[i].ent.rec.x, beetles[i].ent.rec.y}
         pos = vec2_move_towards(pos, rl.Vector2{SCREEN.x /2 - 70, SCREEN.y /2}, beetles[i].ent.speed)
 
@@ -102,6 +135,7 @@ render_beetles :: proc()
 	{
 		if beetles[i].ent.alive
 		{
+            DrawCircleLines(i32(beetles[i].ent.rec.x + beetles[i].ent.spr.src.width/SOLDIER_PIVOT), i32(beetles[i].ent.rec.y + beetles[i].ent.spr.src.width/SOLDIER_PIVOT), f32(beetles[i].detection_radius), RED)
 	        DrawRectangleLinesEx(beetles[i].ent.rec, 4, RED)
 	        DrawTexturePro(
 	            beetle_tex, 

@@ -60,6 +60,10 @@ Ant :: struct {
     type: ANT_TYPES,
     spawn_point: rl.Vector2,
     target: rl.Vector2,
+
+    target_beetle: ^Beetle,
+    attack_cooldown: f32,
+    attack_timer: f32,
     detection_radius: i32,
     hp: i32,
     dmg: i32,
@@ -70,16 +74,9 @@ Beetle :: struct {
     rot: f32,
     spawn_point: rl.Vector2,
     target: ^Ant,
-    detection_radius: i32,
-    hp: i32,
-    dmg: i32,
-}
-
-Enemy :: struct {
-    ent: Entity,
-    rot: f32,
-    spawn_point: rl.Vector2,
-    target: rl.Vector2,
+    
+    attack_cooldown: f32,
+    attack_timer: f32,
     detection_radius: i32,
     hp: i32,
     dmg: i32,

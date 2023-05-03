@@ -1,7 +1,7 @@
 package LD_53 
 
 import rl "vendor:raylib"
-import "core:fmt"
+// import "core:fmt"
 
 spawn_timer : f32 = 0
 beetle_spawn_timer : f32 = 10
@@ -25,7 +25,7 @@ update_gameplay :: proc() {
 
         if spawn_timer >= beetle_spawn_timer
         {
-            fmt.println("SPAWN BEETLE")
+            // fmt.println("SPAWN BEETLE")
             spawn_beetle()
             spawn_timer = 0
         }
@@ -56,7 +56,7 @@ render_gameplay :: proc(){
 
     {// UI
        render_buttons()
-        DrawText(TextFormat("Liver Pieces Supply: %i", liver_pieces_count), 700, 10, 50, GRAY)
+        DrawText(TextFormat("Liver Pieces Supply: %i, %i", liver_pieces_count, len(liver_pieces_for_building)), 620, 10, 50, GRAY)
         DrawText(TextFormat("Gatherer Ants: %i", gatherer_ants_count), 700, 60, 50, GRAY)
         DrawText(TextFormat("Builder Ants: %i", builder_ants_count), 700, 110, 50, GRAY)
         DrawText(TextFormat("Soldier Ants: %i", soldier_ants_count), 700, 160, 50, GRAY)

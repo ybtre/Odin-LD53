@@ -103,10 +103,10 @@ handle_liver_piece_dropoff :: proc(POS : rl.Vector2, PIECE : ^Entity)
     liver_pieces_count += 1
     // fmt.println(liver_pieces_count)
 
-    for i in 0..<liver_pieces_count 
-    {
-        PIECE.rec = {POS.x, POS.y + f32((rl.GetRandomValue(11, 14) * i)), PIECE.spr.src.width/LIVER_PIECES_SCALE, PIECE.spr.src.height/LIVER_PIECES_SCALE}
-        PIECE.spr.dest = {POS.x, POS.y + f32((12 * i)), PIECE.spr.src.width/LIVER_PIECES_SCALE, PIECE.spr.src.height/LIVER_PIECES_SCALE}
+    // for i in 0..<liver_pieces_count 
+    // {
+        PIECE.rec = {POS.x, POS.y + f32((rl.GetRandomValue(11, 14) * i32(len(liver_pieces_for_building)))), PIECE.spr.src.width/LIVER_PIECES_SCALE, PIECE.spr.src.height/LIVER_PIECES_SCALE}
+        PIECE.spr.dest = {POS.x, POS.y + f32((12 * i32(len(liver_pieces_for_building)))), PIECE.spr.src.width/LIVER_PIECES_SCALE, PIECE.spr.src.height/LIVER_PIECES_SCALE}
         append(&liver_pieces_for_building, PIECE)
-    }
+    // }
 }

@@ -1,7 +1,7 @@
 package LD_53
 
 import rl "vendor:raylib"
-// import "core:fmt"
+import "core:fmt"
 
 MAX_ANTS :: 30
 ants : [MAX_ANTS]Ant
@@ -50,7 +50,7 @@ setup_ants :: proc() {
         ants[i].attack_cooldown = 2
         ants[i].attack_timer = ants[i].attack_cooldown
         ants[i].hp = 3
-        ants[i].dmg = 1
+        ants[i].dmg = 0
     }
    
 }
@@ -62,14 +62,19 @@ spawn_ant :: proc(ant: ^Ant, TYPE: ANT_TYPES){
 
     if ant.type == .GATHERER
     {
-        
+        ant.hp = 2
+        ant.ent.speed = 1        
     }
     else if ant.type == .BUILDER
     {
-        
+        ant.hp = 1
+        ant.ent.speed = 1.25
     }
     else if ant.type == .SOLDIER
-    {
+    {    
+        ant.hp = 3
+        ant.dmg = 1
+        ant.ent.speed = 2
         ant.target = rl.Vector2{SCREEN.x /2 - 70, SCREEN.y /2}
     }
 }
@@ -102,43 +107,58 @@ update_ants :: proc() {
 
 update_gatherer_ants :: proc(i: int)
 {
-    if ants[i].ent.rec.x == ants[i].target.x &&
-        ants[i].ent.rec.y == ants[i].target.y
+    if ants[i].hp <= 0
     {
-        ants[i].has_resources = true
-        ants[i].liver_piece = spawn_liver_piece(&ants[i])
-    }   
-    
-    if ants[i].ent.rec.x == ants[i].spawn_point.x && ants[i].ent.rec.y == ants[i].spawn_point.y
-    {
-        ants[i].has_resources = false
-        if ants[i].liver_piece != nil
-        {
-            handle_liver_piece_dropoff(liver_pieces_dropoff_point, ants[i].liver_piece)
-            ants[i].liver_piece = nil
-        }
-    }   
-
-    if !ants[i].has_resources
-    {
-        pos := rl.Vector2{ants[i].ent.rec.x, ants[i].ent.rec.y}
-        pos = vec2_move_towards(pos, ants[i].target, ants[i].ent.speed)
-
-        set_ant_pos(&ants[i], pos)
-    }
+        // fmt.println("UPDT GATHERER ANTS DEAD")
+        ants[i].ent.alive = false
+        gatherer_ants_count -= 1
+    } 
     else 
     {
-        pos := rl.Vector2{ants[i].ent.rec.x, ants[i].ent.rec.y}
-        pos = vec2_move_towards(pos, ants[i].spawn_point, ants[i].ent.speed)
+        if ants[i].ent.rec.x == ants[i].target.x &&
+            ants[i].ent.rec.y == ants[i].target.y
+        {
+            ants[i].has_resources = true
+            ants[i].liver_piece = spawn_liver_piece(&ants[i])
+        }   
+    
+        if ants[i].ent.rec.x == ants[i].spawn_point.x && ants[i].ent.rec.y == ants[i].spawn_point.y
+        {
+            ants[i].has_resources = false
+            if ants[i].liver_piece != nil
+            {
+                handle_liver_piece_dropoff(liver_pieces_dropoff_point, ants[i].liver_piece)
+                ants[i].liver_piece = nil
+            }
+        }   
 
-        set_ant_pos(&ants[i], pos)
+        if !ants[i].has_resources
+        {
+            pos := rl.Vector2{ants[i].ent.rec.x, ants[i].ent.rec.y}
+            pos = vec2_move_towards(pos, ants[i].target, ants[i].ent.speed)
 
-        set_liver_piece_pos_to_ant(&ants[i], ants[i].liver_piece)
+            set_ant_pos(&ants[i], pos)
+        }
+        else 
+        {
+            pos := rl.Vector2{ants[i].ent.rec.x, ants[i].ent.rec.y}
+            pos = vec2_move_towards(pos, ants[i].spawn_point, ants[i].ent.speed)
+
+            set_ant_pos(&ants[i], pos)
+
+            set_liver_piece_pos_to_ant(&ants[i], ants[i].liver_piece)
+        }
     }
 }
 
 update_builder_ants :: proc(i: int)
 {
+    if ants[i].hp <= 0
+    {
+        ants[i].ent.alive = false
+        builder_ants_count -= 1
+    }
+
     if !ants[i].has_resources
     { 
         if ants[i].liver_piece != nil
@@ -154,7 +174,8 @@ update_builder_ants :: proc(i: int)
             {
 
                 last_piece := pop(&liver_pieces_for_building)
-                liver_pieces_count -= 1
+                // liver_pieces_count -= 1
+                fmt.println("PROGRESS")
                 ants[i].liver_piece = last_piece
             }
 
@@ -174,9 +195,10 @@ update_builder_ants :: proc(i: int)
 
     if ants[i].liver_piece != nil &&
     ants[i].ent.rec.x == ants[i].liver_piece.rec.x &&
-    ants[i].ent.rec.y == ants[i].liver_piece.rec.y  
+    ants[i].ent.rec.y == ants[i].liver_piece.rec.y && ants[i].has_resources == false
     {
         ants[i].has_resources = true
+        liver_pieces_count -= 1
     }   
     if ants[i].ent.rec.x == 1200 &&
     ants[i].ent.rec.y == 650
@@ -191,6 +213,12 @@ update_builder_ants :: proc(i: int)
 update_soldier_ants :: proc(i: int)
 {
     using rl
+
+    if ants[i].hp <= 0
+    {
+        ants[i].ent.alive = false
+        soldier_ants_count -= 1
+    }
 
     if ants[i].target_beetle == nil
     {
@@ -290,6 +318,5 @@ render_ants :: proc() {
                     break
             }
         }
-
     }
 }

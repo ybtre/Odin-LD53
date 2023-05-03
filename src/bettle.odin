@@ -1,6 +1,7 @@
 package LD_53
 
 import rl "vendor:raylib"
+// import "core:fmt"
 
 MAX_BEETLES :: 20
 beetles : [MAX_BEETLES]Beetle
@@ -19,8 +20,7 @@ setup_bettles :: proc() {
         beetles[i].ent.alive = false
         beetles[i].ent.rec = {0, 0, beetles[i].ent.spr.src.width, beetles[i].ent.spr.src.height}
         beetles[i].ent.color = rl.WHITE
-        beetles[i].ent.speed = 2
-
+        beetles[i].ent.speed = 1.5
         beetles[i].rot = 0
 
 		spawn_dir := rl.GetRandomValue(0, 1)
@@ -35,9 +35,9 @@ setup_bettles :: proc() {
         beetles[i].target = nil
         beetles[i].detection_radius = 100
 		beetles[i].attack_cooldown = 2
-		beetles[i].attack_timer = 0
-        beetles[i].hp = 2
-        beetles[i].dmg = 1
+		beetles[i].attack_timer = beetles[i].attack_cooldown
+        beetles[i].hp = 5
+		beetles[i].dmg = 1
     }
 }
 
@@ -93,32 +93,76 @@ update_beetle :: proc(i: int)
 	
 	if beetles[i].target != nil
 	{
-		if beetles[i].ent.rec.x != beetles[i].target.ent.rec.x && beetles[i].ent.rec.y != beetles[i].target.ent.rec.y
-	    {
-	        pos := rl.Vector2{beetles[i].ent.rec.x, beetles[i].ent.rec.y}
-	        pos = vec2_move_towards(pos, rl.Vector2{beetles[i].target.ent.rec.x, beetles[i].target.ent.rec.y}, beetles[i].ent.speed)
+        pos := rl.Vector2{beetles[i].ent.rec.x, beetles[i].ent.rec.y}
+        pos = vec2_move_towards(pos, rl.Vector2{beetles[i].target.ent.rec.x, beetles[i].target.ent.rec.y}, beetles[i].ent.speed)
 
-	        set_beetle_pos(&beetles[i], pos)
-		} 
+        set_beetle_pos(&beetles[i], pos)
+
+		if beetles[i].ent.rec.x == beetles[i].target.ent.rec.x && beetles[i].ent.rec.y == beetles[i].target.ent.rec.y
+        {
+            beetles[i].attack_timer += rl.GetFrameTime()
+
+            if beetles[i].attack_timer >= beetles[i].attack_cooldown 
+            {
+                if beetles[i].target.ent.alive
+                {
+                    // fmt.println("ATTACK")
+                    // fmt.println(beetles[i].target.hp)
+                    // fmt.println(beetles[i].dmg)
+                    beetles[i].target.hp -= beetles[i].dmg
+                    // fmt.println(beetles[i].target_beetle.hp)
+                    
+                    beetles[i].attack_timer = 0
+                }
+                else if beetles[i].target.ent.alive == false
+                {
+                    // fmt.println("TARGET NIL")
+                    beetles[i].target = nil
+                }
+            }
+        }
 	}
 	else if beetles[i].target == nil
 	{
-        // for j in 0..<MAX_ANTS
-		// {
-            // if CheckCollisionCircleRec(Vector2{ants[i].ent.rec.x + ants[i].ent.spr.src.width/SOLDIER_PIVOT, ants[i].ent.rec.y + ants[i].ent.spr.src.width/SOLDIER_PIVOT}, 
-                                        // f32(ants[i].detection_radius), beetles[j].ent.rec)
-			// if CheckCollisionCircleRec(Vector2{beetles[i].ent.rec.x })
-   //          {
-   //              fmt.println("HIT")
-   //              ants[i].target_beetle = &beetles[j]
-   //          }
-        // }
-
-		
+        target_nil := rl.Vector2{SCREEN.x /2 - 70, SCREEN.y /2}
         pos := rl.Vector2{beetles[i].ent.rec.x, beetles[i].ent.rec.y}
-        pos = vec2_move_towards(pos, rl.Vector2{SCREEN.x /2 - 70, SCREEN.y /2}, beetles[i].ent.speed)
+        pos = vec2_move_towards(pos, target_nil, beetles[i].ent.speed)
 
         set_beetle_pos(&beetles[i], pos)
+    
+        for j in 0..<MAX_ANTS 
+		{
+            if ants[j].ent.alive && ants[j].type == .GATHERER
+            {
+                if CheckCollisionCircleRec(Vector2{beetles[i].ent.rec.x + beetles[i].ent.spr.src.width/SOLDIER_PIVOT, beetles[i].ent.rec.y + beetles[i].ent.spr.src.width/SOLDIER_PIVOT}, 
+                                            f32(beetles[i].detection_radius), ants[j].ent.rec)
+                {
+                    // fmt.println("FOUND GATHERER TARGET")
+                    beetles[i].target = &ants[j]
+                    break
+                }
+            }
+			else if ants[j].ent.alive && ants[j].type == .BUILDER
+			{
+				if CheckCollisionCircleRec(Vector2{beetles[i].ent.rec.x + beetles[i].ent.spr.src.width/SOLDIER_PIVOT, beetles[i].ent.rec.y + beetles[i].ent.spr.src.width/SOLDIER_PIVOT}, 
+                                            f32(beetles[i].detection_radius), ants[j].ent.rec)
+                {
+                    // fmt.println("FOUND BUILDER TARGET")
+                    beetles[i].target = &ants[j]
+                    break
+                }				
+			} 
+			else if ants[j].ent.alive && ants[j].type == .SOLDIER
+			{
+				if CheckCollisionCircleRec(Vector2{beetles[i].ent.rec.x + beetles[i].ent.spr.src.width/SOLDIER_PIVOT, beetles[i].ent.rec.y + beetles[i].ent.spr.src.width/SOLDIER_PIVOT}, 
+	                                        f32(beetles[i].detection_radius), ants[j].ent.rec)
+	            {
+	                // fmt.println("FOUND SOLDIER TARGET")
+	                beetles[i].target = &ants[j]
+	                break
+	            }				
+			}
+        }
 	}
 }
 

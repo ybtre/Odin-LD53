@@ -42,6 +42,8 @@ update_gameplay :: proc() {
 
 render_gameplay :: proc(){
     using rl
+
+    render_background()
     
     render_cathedral()
     render_liver()

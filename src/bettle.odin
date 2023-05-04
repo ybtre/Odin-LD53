@@ -10,8 +10,9 @@ beetles_count: i32
 
 
 setup_bettles :: proc() {
-    beetle_tex = rl.LoadTexture("../raw_photos/soldier_ant_scaled.png")
-
+    // beetle_tex = rl.LoadTexture("../raw_photos/soldier_ant_scaled.png")
+    beetle_tex = rl.LoadTexture("../assets/beetle.png")
+  
     for i in 0..<MAX_BEETLES{
         beetles[i].ent.spr.src = {0,0, 160, 160}
         beetles[i].ent.spr.dest = { 0, 0, beetles[i].ent.spr.src.width/GATHERER_SCALE_MULTI * 1.5, beetles[i].ent.spr.src.height/GATHERER_SCALE_MULTI }
@@ -180,14 +181,14 @@ render_beetles :: proc()
 		if beetles[i].ent.alive
 		{
             DrawCircleLines(i32(beetles[i].ent.rec.x + beetles[i].ent.spr.src.width/SOLDIER_PIVOT), i32(beetles[i].ent.rec.y + beetles[i].ent.spr.src.width/SOLDIER_PIVOT), f32(beetles[i].detection_radius), RED)
-	        DrawRectangleLinesEx(beetles[i].ent.rec, 4, RED)
+	        // DrawRectangleLinesEx(beetles[i].ent.rec, 4, RED)
 	        DrawTexturePro(
 	            beetle_tex, 
 	            beetles[i].ent.spr.src, 
 	            beetles[i].ent.spr.dest, 
 	            beetles[i].ent.spr.center,
-	            // beetles[i].rot,
-	            f32(GetTime()) * 90,
+	            beetles[i].rot,
+	            // f32(GetTime()) * 90,
 	            RED)
 		}
 	}	

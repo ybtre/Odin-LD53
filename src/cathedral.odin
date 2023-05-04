@@ -6,9 +6,10 @@ cathedral : Cathedral
 cathedral_tex : rl.Texture2D
 
 setup_cathedral :: proc() {
-    cathedral_tex = rl.LoadTexture("../assets/cathedral_temp.png")
+    // cathedral_tex = rl.LoadTexture("../assets/cathedral_temp.png")
+    cathedral_tex = rl.LoadTexture("../assets/cathedral.png")
 
-    cathedral.ent.spr.src = {0,0, 320, 320}
+    cathedral.ent.spr.src = {0,0, 280, 240}
     cathedral.ent.spr.dest = { 0, 0, cathedral.ent.spr.src.width, cathedral.ent.spr.src.height }
     cathedral.ent.spr.center = { cathedral.ent.spr.src.width / 2.0, cathedral.ent.spr.src.height / 2.0 }
 
@@ -45,7 +46,7 @@ update_cathedral :: proc() {
 render_cathedral :: proc() {
     using rl
 
-    rl.DrawRectangleLinesEx(cathedral.ent.rec, 4, rl.ORANGE)
+    // rl.DrawRectangleLinesEx(cathedral.ent.rec, 4, rl.ORANGE)
 
     if cathedral.build_stage == 0
     {

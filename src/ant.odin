@@ -26,9 +26,12 @@ SOLDIER_SCALE_MULTI :: 2
 SOLDIER_PIVOT :: SOLDIER_SCALE_MULTI * 2
 
 setup_ants :: proc() {
-    gatherer_ant_tex = rl.LoadTexture("../raw_photos/gatherer_ant_scaled.png")
-    builder_ant_tex = rl.LoadTexture("../raw_photos/builder_ant_scaled.png")
-    soldier_ant_tex = rl.LoadTexture("../raw_photos/soldier_ant_scaled.png")
+    // gatherer_ant_tex = rl.LoadTexture("../raw_photos/gatherer_ant_scaled.png")
+    // builder_ant_tex = rl.LoadTexture("../raw_photos/builder_ant_scaled.png")
+    // soldier_ant_tex = rl.LoadTexture("../raw_photos/soldier_ant_scaled.png")
+    gatherer_ant_tex = rl.LoadTexture("../assets/gatherer_ant.png")
+    builder_ant_tex = rl.LoadTexture("../assets/builder_ant.png")
+    soldier_ant_tex = rl.LoadTexture("../assets/soldier_ant.png")
 
     for i in 0..<MAX_ANTS {
         ants[i].ent.spr.src = {0,0, 160, 160}
@@ -43,8 +46,8 @@ setup_ants :: proc() {
         ants[i].rot = 0
         ants[i].type = ANT_TYPES.GATHERER
         ants[i].has_resources = false
-        ants[i].spawn_point = rl.Vector2{ cathedral.ent.rec.x, cathedral.ent.rec.y }
-        ants[i].target = rl.Vector2{liver.ent.rec.x + liver.ent.rec.width, liver.ent.rec.y + liver.ent.rec.height}
+        ants[i].spawn_point = rl.Vector2{ cathedral.ent.rec.x + cathedral.ent.rec.width / 2 - 25, cathedral.ent.rec.y + cathedral.ent.rec.height }
+        ants[i].target = rl.Vector2{liver.ent.rec.x + liver.ent.rec.width / 2 + 20, liver.ent.rec.y + liver.ent.rec.height / 2 + 20}
         ants[i].target_beetle = nil
         ants[i].detection_radius = 200
         ants[i].attack_cooldown = 2
@@ -122,7 +125,7 @@ update_gatherer_ants :: proc(i: int)
             ants[i].liver_piece = spawn_liver_piece(&ants[i])
         }   
     
-        if ants[i].ent.rec.x == ants[i].spawn_point.x && ants[i].ent.rec.y == ants[i].spawn_point.y
+        if ants[i].ent.rec.x == liver_pieces_dropoff_point.x && ants[i].ent.rec.y == liver_pieces_dropoff_point.y
         {
             ants[i].has_resources = false
             if ants[i].liver_piece != nil
@@ -142,7 +145,7 @@ update_gatherer_ants :: proc(i: int)
         else 
         {
             pos := rl.Vector2{ants[i].ent.rec.x, ants[i].ent.rec.y}
-            pos = vec2_move_towards(pos, ants[i].spawn_point, ants[i].ent.speed)
+            pos = vec2_move_towards(pos, liver_pieces_dropoff_point, ants[i].ent.speed)
 
             set_ant_pos(&ants[i], pos)
 
@@ -180,14 +183,14 @@ update_builder_ants :: proc(i: int)
             }
 
             pos := rl.Vector2{ants[i].ent.rec.x, ants[i].ent.rec.y}
-            pos = vec2_move_towards(pos, rl.Vector2{1000, 650}, ants[i].ent.speed)
+            pos = vec2_move_towards(pos, rl.Vector2{900, 640}, ants[i].ent.speed)
 
             set_ant_pos(&ants[i], pos)
         }
     } else 
     {
         pos := rl.Vector2{ants[i].ent.rec.x, ants[i].ent.rec.y}
-        pos = vec2_move_towards(pos, rl.Vector2{1200, 650}, ants[i].ent.speed)
+        pos = vec2_move_towards(pos, rl.Vector2{1200, 640}, ants[i].ent.speed)
 
         set_ant_pos(&ants[i], pos)
         set_liver_piece_pos_to_ant(&ants[i], ants[i].liver_piece)
@@ -201,7 +204,7 @@ update_builder_ants :: proc(i: int)
         liver_pieces_count -= 1
     }   
     if ants[i].ent.rec.x == 1200 &&
-    ants[i].ent.rec.y == 650
+    ants[i].ent.rec.y == 640
     {
         ants[i].has_resources = false
         ants[i].liver_piece.alive = false
@@ -283,37 +286,37 @@ render_ants :: proc() {
             switch ants[i].type
             {
                 case .GATHERER:
-                    DrawRectangleLinesEx(ants[i].ent.rec, 4, GREEN)
+                    // DrawRectangleLinesEx(ants[i].ent.rec, 4, GREEN)
                     DrawTexturePro(
                         gatherer_ant_tex, 
                         ants[i].ent.spr.src, 
                         ants[i].ent.spr.dest, 
                         ants[i].ent.spr.center,
-                        // ants[i].rot,
-                        f32(GetTime()) * 90,
+                        ants[i].rot,
+                        // f32(GetTime()) * 90,
                         ants[i].ent.color)
                     break
                 case .BUILDER:
-                    DrawRectangleLinesEx(ants[i].ent.rec, 4, GREEN)
+                    // DrawRectangleLinesEx(ants[i].ent.rec, 4, GREEN)
                     DrawTexturePro(
                         builder_ant_tex, 
                         ants[i].ent.spr.src, 
                         ants[i].ent.spr.dest, 
                         ants[i].ent.spr.center,
-                        // ants[i].rot,
-                        f32(GetTime()) * 45,
+                        ants[i].rot,
+                        // f32(GetTime()) * 45,
                         ants[i].ent.color)
                     break
                 case .SOLDIER:
                     DrawCircleLines(i32(ants[i].ent.rec.x + ants[i].ent.spr.src.width/SOLDIER_PIVOT), i32(ants[i].ent.rec.y + ants[i].ent.spr.src.width/SOLDIER_PIVOT), f32(ants[i].detection_radius), RED)
-                    DrawRectangleLinesEx(ants[i].ent.rec, 4, GREEN)
+                    // DrawRectangleLinesEx(ants[i].ent.rec, 4, GREEN)
                     DrawTexturePro(
                         soldier_ant_tex, 
                         ants[i].ent.spr.src, 
                         ants[i].ent.spr.dest, 
                         ants[i].ent.spr.center,
-                        // ants[i].rot,
-                        f32(GetTime()) * 135,
+                        ants[i].rot,
+                        // f32(GetTime()) * 135,
                         ants[i].ent.color)
                     break
             }

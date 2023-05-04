@@ -105,7 +105,7 @@ render_buttons :: proc() {
             DrawTexturePro(gatherer_ant_tex, buttons[0].spr.src, buttons[0].spr.dest, buttons[0].spr.center, 0, GREEN)
         } 
         else {
-            DrawTexturePro(gatherer_ant_tex, buttons[0].spr.src, buttons[0].spr.dest, buttons[0].spr.center, 0, BLUE)
+            DrawTexturePro(gatherer_ant_tex, buttons[0].spr.src, buttons[0].spr.dest, buttons[0].spr.center, 0, BLACK)
         }
     } else {
         DrawTexturePro(gatherer_ant_tex, buttons[0].spr.src, buttons[0].spr.dest, buttons[0].spr.center, 0, MAGENTA)
@@ -118,7 +118,7 @@ render_buttons :: proc() {
             DrawTexturePro(builder_ant_tex, buttons[1].spr.src, buttons[1].spr.dest, buttons[1].spr.center, 0, GREEN)
         } 
         else {
-            DrawTexturePro(builder_ant_tex, buttons[1].spr.src, buttons[1].spr.dest, buttons[1].spr.center, 0, BLUE)
+            DrawTexturePro(builder_ant_tex, buttons[1].spr.src, buttons[1].spr.dest, buttons[1].spr.center, 0, BLACK)
         }
     } else {
         DrawTexturePro(builder_ant_tex, buttons[1].spr.src, buttons[1].spr.dest, buttons[1].spr.center, 0, MAGENTA)
@@ -131,7 +131,7 @@ render_buttons :: proc() {
             DrawTexturePro(soldier_ant_tex, buttons[2].spr.src, buttons[2].spr.dest, buttons[2].spr.center, 0, GREEN)
         } 
         else {
-            DrawTexturePro(soldier_ant_tex, buttons[2].spr.src, buttons[2].spr.dest, buttons[2].spr.center, 0, BLUE)
+            DrawTexturePro(soldier_ant_tex, buttons[2].spr.src, buttons[2].spr.dest, buttons[2].spr.center, 0, BLACK)
         }
     } else {
         DrawTexturePro(soldier_ant_tex, buttons[2].spr.src, buttons[2].spr.dest, buttons[2].spr.center, 0, MAGENTA)

@@ -3,22 +3,24 @@ package LD_53
 import rl "vendor:raylib"
 import "core:fmt"
 
-MAX_ANTS :: 30
+MAX_ANTS :: MAX_ANTS_BUILDER + MAX_ANTS_GATHERER + MAX_ANTS_SOLDIER
 ants : [MAX_ANTS]Ant
+
+MAX_ANTS_GATHERER :: 12
 gatherer_ant_tex : rl.Texture2D
 gatherer_ants_count : i32
 
 GATHERER_SCALE_MULTI :: 3
 GATHERER_PIVOT :: GATHERER_SCALE_MULTI * 2
 
-MAX_ANTS_BUILDER :: 5
+MAX_ANTS_BUILDER :: 6
 builder_ant_tex : rl.Texture2D
 builder_ants_count : i32
 
 BUILDER_SCALE_MULTI :: 3
 BUILDER_PIVOT :: BUILDER_SCALE_MULTI * 2
 
-MAX_ANTS_SOLDIER :: 5
+MAX_ANTS_SOLDIER :: 9
 soldier_ant_tex : rl.Texture2D
 soldier_ants_count : i32
 
@@ -40,7 +42,7 @@ setup_ants :: proc() {
 
         ants[i].ent.alive = false
         ants[i].ent.rec = {0, 0, ants[i].ent.spr.src.width, ants[i].ent.spr.src.height}
-        ants[i].ent.color = rl.WHITE
+        ants[i].ent.color = C_PLAYER
         ants[i].ent.speed = 2
 
         ants[i].rot = 0
@@ -96,13 +98,10 @@ update_ants :: proc() {
             {
                 case .GATHERER:
                     update_gatherer_ants(i)
-                    break
                 case .BUILDER:
                     update_builder_ants(i) 
-                    break
                 case .SOLDIER:
                     update_soldier_ants(i)
-                    break
             }
         }
     }
@@ -183,7 +182,9 @@ update_builder_ants :: proc(i: int)
             }
 
             pos := rl.Vector2{ants[i].ent.rec.x, ants[i].ent.rec.y}
-            pos = vec2_move_towards(pos, rl.Vector2{900, 640}, ants[i].ent.speed)
+
+            idle_pos := rl.Vector2{900, 640}
+            pos = vec2_move_towards(pos, idle_pos, ants[i].ent.speed)
 
             set_ant_pos(&ants[i], pos)
         }
@@ -295,7 +296,6 @@ render_ants :: proc() {
                         ants[i].rot,
                         // f32(GetTime()) * 90,
                         ants[i].ent.color)
-                    break
                 case .BUILDER:
                     // DrawRectangleLinesEx(ants[i].ent.rec, 4, GREEN)
                     DrawTexturePro(
@@ -306,9 +306,8 @@ render_ants :: proc() {
                         ants[i].rot,
                         // f32(GetTime()) * 45,
                         ants[i].ent.color)
-                    break
                 case .SOLDIER:
-                    DrawCircleLines(i32(ants[i].ent.rec.x + ants[i].ent.spr.src.width/SOLDIER_PIVOT), i32(ants[i].ent.rec.y + ants[i].ent.spr.src.width/SOLDIER_PIVOT), f32(ants[i].detection_radius), RED)
+                    // DrawCircleLines(i32(ants[i].ent.rec.x + ants[i].ent.spr.src.width/SOLDIER_PIVOT), i32(ants[i].ent.rec.y + ants[i].ent.spr.src.width/SOLDIER_PIVOT), f32(ants[i].detection_radius), RED)
                     // DrawRectangleLinesEx(ants[i].ent.rec, 4, GREEN)
                     DrawTexturePro(
                         soldier_ant_tex, 
@@ -318,7 +317,6 @@ render_ants :: proc() {
                         ants[i].rot,
                         // f32(GetTime()) * 135,
                         ants[i].ent.color)
-                    break
             }
         }
     }

@@ -28,29 +28,23 @@ update_engine :: proc(){
     switch current_screen {
         case .MAIN_MENU:
             update_main_menu()
-            break
         case .GAMEPLAY:
             update_gameplay()
-            break
         case .GAME_OVER:
-            break
     }
 }
 
 render_engine :: proc(){
     rl.BeginDrawing()
-    rl.ClearBackground(rl.BLACK)
+    rl.ClearBackground(rl.Color{ 71, 45, 60, 255 })
 
     {// RENDER
         switch current_screen {
             case .MAIN_MENU:
                 render_main_menu()
-                break
             case .GAMEPLAY:
                 render_gameplay()
-                break
             case .GAME_OVER:
-                break
         }
         // background.render()
         // game_map.render(game_atlas)

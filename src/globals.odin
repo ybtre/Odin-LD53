@@ -2,8 +2,8 @@ package LD_53
 
 import rl "vendor:raylib"
 
-C_PLAYER     :: rl.Color{ 72, 107, 127, 255 }
-C_ASTEROID   :: rl.Color{ 187, 71, 79, 255 }
+C_PLAYER     :: rl.Color{ 60, 172, 215, 255 }
+C_BEETLE 	 :: rl.Color{ 230, 72, 46, 255 }
 C_BULLET     :: rl.Color{ 122, 156, 150, 255 }
 C_GAME_MAP   :: rl.Color{ 255, 255, 255, 220 }
 C_CURSOR     :: rl.Color{ 209, 191, 176, 255 }

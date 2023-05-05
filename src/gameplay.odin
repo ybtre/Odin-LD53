@@ -43,13 +43,13 @@ update_gameplay :: proc() {
 render_gameplay :: proc(){
     using rl
 
-    render_background()
+    // render_background()
     
     render_cathedral()
     render_liver()
+    render_liver_pieces()
     render_ants()
     render_beetles()
-    render_liver_pieces()
    
     if is_paused && ((pause_blink_counter / 30) % 2 == 0)
     {

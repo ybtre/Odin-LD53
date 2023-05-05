@@ -20,8 +20,8 @@ setup_bettles :: proc() {
 
         beetles[i].ent.alive = false
         beetles[i].ent.rec = {0, 0, beetles[i].ent.spr.src.width, beetles[i].ent.spr.src.height}
-        beetles[i].ent.color = rl.WHITE
-        beetles[i].ent.speed = 1.5
+        beetles[i].ent.color = C_BEETLE
+		beetles[i].ent.speed = 1.5
         beetles[i].rot = 0
 
 		spawn_dir := rl.GetRandomValue(0, 1)
@@ -133,7 +133,17 @@ update_beetle :: proc(i: int)
     
         for j in 0..<MAX_ANTS 
 		{
-            if ants[j].ent.alive && ants[j].type == .GATHERER
+			if ants[j].ent.alive && ants[j].type == .SOLDIER
+			{
+				if CheckCollisionCircleRec(Vector2{beetles[i].ent.rec.x + beetles[i].ent.spr.src.width/SOLDIER_PIVOT, beetles[i].ent.rec.y + beetles[i].ent.spr.src.width/SOLDIER_PIVOT}, 
+	                                        f32(beetles[i].detection_radius), ants[j].ent.rec)
+	            {
+	                // fmt.println("FOUND SOLDIER TARGET")
+	                beetles[i].target = &ants[j]
+	                break
+	            }				
+			}
+            else if ants[j].ent.alive && ants[j].type == .GATHERER
             {
                 if CheckCollisionCircleRec(Vector2{beetles[i].ent.rec.x + beetles[i].ent.spr.src.width/SOLDIER_PIVOT, beetles[i].ent.rec.y + beetles[i].ent.spr.src.width/SOLDIER_PIVOT}, 
                                             f32(beetles[i].detection_radius), ants[j].ent.rec)
@@ -153,16 +163,6 @@ update_beetle :: proc(i: int)
                     break
                 }				
 			} 
-			else if ants[j].ent.alive && ants[j].type == .SOLDIER
-			{
-				if CheckCollisionCircleRec(Vector2{beetles[i].ent.rec.x + beetles[i].ent.spr.src.width/SOLDIER_PIVOT, beetles[i].ent.rec.y + beetles[i].ent.spr.src.width/SOLDIER_PIVOT}, 
-	                                        f32(beetles[i].detection_radius), ants[j].ent.rec)
-	            {
-	                // fmt.println("FOUND SOLDIER TARGET")
-	                beetles[i].target = &ants[j]
-	                break
-	            }				
-			}
         }
 	}
 }
@@ -180,7 +180,7 @@ render_beetles :: proc()
 	{
 		if beetles[i].ent.alive
 		{
-            DrawCircleLines(i32(beetles[i].ent.rec.x + beetles[i].ent.spr.src.width/SOLDIER_PIVOT), i32(beetles[i].ent.rec.y + beetles[i].ent.spr.src.width/SOLDIER_PIVOT), f32(beetles[i].detection_radius), RED)
+            // DrawCircleLines(i32(beetles[i].ent.rec.x + beetles[i].ent.spr.src.width/SOLDIER_PIVOT), i32(beetles[i].ent.rec.y + beetles[i].ent.spr.src.width/SOLDIER_PIVOT), f32(beetles[i].detection_radius), RED)
 	        // DrawRectangleLinesEx(beetles[i].ent.rec, 4, RED)
 	        DrawTexturePro(
 	            beetle_tex, 
@@ -189,7 +189,7 @@ render_beetles :: proc()
 	            beetles[i].ent.spr.center,
 	            beetles[i].rot,
 	            // f32(GetTime()) * 90,
-	            RED)
+				beetles[i].ent.color)
 		}
 	}	
 }
